@@ -1,41 +1,62 @@
-<!-- The character `|` around a string denotes a place in this markdown file that needs to be changed for each extension. -->
-<!-- You may also delete any comments you don't need anymore. -->
-
-# TODO:
-
-- [ ] Replace information in `/README.md`
-- [ ] Replace name in `/rollup.config.js`
-- [ ] Replace information in `/package.json`
-- [ ] Write extension in `/src/index.js`
-- [ ] Write tests in `/spec/index.test.js`
-- [ ] Uncomment release in `/.github/workflows/main.yml`
-
-<!-- Delete this line and above -->
-
-# marked-|this-extension|
-<!-- Description -->
+# marked-gh-permalink
+This extension allows you to use GitHub permalink to code snippet in your
+markdown file, and it'll render just like how GitHub rendenrs code snippet from
+its repository, as long as
+1. You provide a GitHub access token.
+2. The token has access right to the repository your permalink points to.
 
 # Usage
-<!-- Show most examples of how to use this extension -->
+Here we'll walk through how to try out this extension from scratch, this assumes
+you have the following:
+- installed `node` and `npm`
+- have a GitHub access token ready (since rendering the permalink requires
+  fetching from GitHub API)
 
-```js
-import {marked} from "marked";
-import |thisExtension| from "marked-|this-extension|";
-
-// or UMD script
-// <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
-// <script src="https://cdn.jsdelivr.net/npm/marked-|this-extension|/lib/index.umd.js"></script>
-
-const options = {
-	// |default options|
-};
-
-marked.use(|thisExtension|(options));
-
-marked.parse("|example markdown|");
-// <p>|example html|</p>
+First we create a new directory, initialize `npm` and download `marked` and this
+extension (for `npm init` just hit defaults for everything it asks):
+```bash
+mkdir test
+npm init -y
+npm install marked marked-gh-permalink
 ```
 
-## `options`
+Then we create a test file `index.mjs` with the following content:
+```javascript
+import { marked } from 'marked';
+import markedGhPermalink from 'marked-gh-permalink';
 
-<!-- If there are no options you can delete this section -->
+// Set up marked
+const ghToken = process.env.GH_PERMALINK_API_TOKEN
+marked.setOptions(marked.getDefaults());
+marked.use(markedGhPermalink(ghToken));
+
+// Example markdown text with permalink to GitHub code snippet
+const input = `
+This is how \`marked\` renders a code block:
+https://github.com/markedjs/marked/blob/91ee15b2d43da92f751165c88d1a78ebc3b99114/src/Renderer.ts#L17-L33
+`
+
+// Convert to html and print it out.
+const result = await marked(input);
+console.log(result);
+```
+
+Finally we run it with our github token:
+```bash
+GH_PERMALINK_API_TOKEN=<fill-in-your-token> node index.mjs
+```
+
+Finally, you'll see the HTML printed in your terminal. If you copy and paste
+that to [html code editer](https://htmlcodeeditor.com/), you'll see this:
+![raw html](./raw-html.png)
+
+Note that it doesn't have syntax highlighting, that's because we use
+[highlight.js](https://highlightjs.org/) for that and it requires importing CSS
+separately. So if we add the following line to the beginning of the HTML we had:
+
+```html
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+```
+
+We get the github-style syntax highlighting, as shown below:
+![styled html](./styled-html.png)

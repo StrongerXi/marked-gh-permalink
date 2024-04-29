@@ -1,7 +1,7 @@
 {
-  "name": "marked-extension-template",
-  "version": "0.0.0",
-  "description": "marked extension template",
+  "name": "marked-gh-permalink",
+  "version": "0.0.1",
+  "description": "marked extension to display github permalink to code snippet",
   "main": "./lib/index.cjs",
   "module": "./src/index.js",
   "browser": "./lib/index.umd.js",
@@ -28,14 +28,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/markedjs/marked-extension-template.git"
+    "url": "git+https://github.com/StrongerXi/marked-gh-permalink.git"
   },
-  "author": "Tony Brix <Tony@Brix.ninja> (https://Tony.Brix.ninja)",
+  "author": "Ryan Guo <ryan.guo99@gmail.com> (https://ryanguo.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/markedjs/marked-extension-template/issues"
+    "url": "https://github.com/StrongerXi/marked-gh-permalink/issues"
   },
-  "homepage": "https://github.com/markedjs/marked-extension-template#readme",
+  "homepage": "https://github.com/StrongerXi/marked-gh-permalink#readme",
   "peerDependencies": {
     "marked": "^12.0.2"
   },
@@ -58,5 +58,8 @@
     "marked": "^12.0.2",
     "rollup": "^4.16.2",
     "semantic-release": "^23.0.8"
+  },
+  "dependencies": {
+    "highlight.js": "^11.9.0"
   }
 }

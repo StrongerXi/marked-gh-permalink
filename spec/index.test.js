@@ -1,18 +1,29 @@
 import { marked } from 'marked';
-import thisExtension from '../src/index.js';
+import markedGhPermalink from '../src/index.js';
 
-describe('this-extension', () => {
+
+// Can't test much without an access token, so just making sure the extension
+// won't break existing stuff or abort on bad access token/page.
+describe('marked-gh-permalink', () => {
   beforeEach(() => {
     marked.setOptions(marked.getDefaults());
   });
 
-  test('no options', () => {
-    marked.use(thisExtension());
-    expect(marked('example markdown')).toBe('<p>example html</p>\n');
+  test('no permalink', async () => {
+    marked.use(markedGhPermalink('bad token'));
+    let text = 'example markdown';
+    await expect(marked(`${text}`)).resolves.toBe(`<p>${text}</p>\n`);
   });
 
-  test('markdown not using this extension', () => {
-    marked.use(thisExtension());
-    expect(marked('not example markdown')).not.toBe('<p>example html</p>\n');
+  test('bad commit in permalink', async () => {
+    marked.use(markedGhPermalink('bad token'));
+    let link = 'https://github.com/markedjs/marked/blob/bad-commit-123/src/Renderer.ts#L17-L33';
+    await expect(marked(link)).resolves.toBe(`<p><a href="${link}">${link}</a></p>\n`);
+  });
+
+  test('bad token', async () => {
+    marked.use(markedGhPermalink('bad token'));
+    let link = 'https://github.com/markedjs/marked/blob/91ee15b2d43da92f751165c88d1a78ebc3b99114/src/Renderer.ts#L17-L33';
+    await expect(marked(link)).resolves.toBe(`<p><a href="${link}">${link}</a></p>\n`);
   });
 });
