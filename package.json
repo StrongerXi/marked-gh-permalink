@@ -57,7 +57,7 @@
     "jest-cli": "^29.7.0",
     "marked": "^12.0.2",
     "rollup": "^4.16.2",
-    "semantic-release": "^23.0.8"
+    "semantic-release": "^23.1.1"
   },
   "dependencies": {
     "highlight.js": "^11.9.0"
